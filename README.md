@@ -1,14 +1,28 @@
-# Interactive Data Analysis & Visualization (Python)
+# UK Violent Crime Analytics with Apache Spark on Azure
 
-This project performs exploratory data analysis and generates visual reports using a Jupyter Notebook.  
-The notebook is exported to HTML so results can be viewed directly in a browser without running code.
+Scalable analysis of UK crime claims using public data and big-data tooling.  
+Evaluates: (1) violent-crime trend, (2) firearms incidents per head (Liverpool vs others),  
+(3) association between firearms and drug offenses.
 
-## Files
-- `analysis.ipynb` – full notebook with code
-- `analysis.html` – rendered report with graphs and outputs
+## Data
+- **Street-level crime (Home Office / Police UK)** – ~19M rows (crime type, lat/lon, month)
+- **English Indices of Deprivation 2010 / LSOA population** – population + deprivation context
 
-## Features
-- Data cleaning & preprocessing
-- Statistical summary
-- Interactive charts / visualizations
-- Insights and interpretation
+## Tech
+PySpark 3.5 • Azure Blob Storage • Python (pandas, matplotlib, seaborn, folium) • SciPy
+
+## Architecture / Pipeline
+1. **Ingest** from Azure Blob (CSV/TXT)  
+2. **Preprocess**: filter relevant crime types, handle nulls, de-duplicate (~4.49M rows removed)  
+3. **Transform**: month parsing, geospatial prep, per-capita joins  
+4. **Analytics**  
+   - **Trend**: monthly counts, **linear regression** slope, **YoY%** with CIs  
+   - **Per-capita**: incidents per 100k using LSOA population (normalize by region size)  
+   - **Association**: drug vs. weapons — joint probability + spatial co-occurrence  
+5. **Visualize**: time-series, bar charts (top forces), heatmaps, **Folium** incident map
+
+## Reproducing (local or Colab)
+```bash
+# env
+pip install pyspark pandas matplotlib seaborn folium scipy
+
